@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <section id="welcome">
+            <h2>Welcome, <span id="doctorName"></span></h2>
+        </section>
+        <nav>
+            <ul>
+                <li><a href="index.html">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section id="welcome">
+            <h2> <span id="doctorName"></span></h2>
+        </section>
+        <section id="appointments">
+            <h3>Your Appointments:</h3>
+            <div id="appointmentList">
+                <!-- Appointments will be loaded here -->
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2023 Health Services</p>
+    </footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Fetch doctor name and appointments from the server
+            fetch('http://localhost:3000/doctor-dashboard', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                document.getElementById('doctorName').textContent = data.doctorName;
+                const appointmentList = document.getElementById('appointmentList');
+                if (data.appointments.length > 0) {
+                    data.appointments.forEach(appointment => {
+                        const appointmentDiv = document.createElement('div');
+                        appointmentDiv.innerHTML = `
+                            <p>Patient: ${appointment.FirstName} ${appointment.LastName}<br>
+                            Date: ${appointment.AppointmentDate}<br>
+                            Time: ${appointment.AppointmentTime}<br>
+                            Status: ${appointment.Status}</p><hr>
+                        `;
+                        appointmentList.appendChild(appointmentDiv);
+                    });
+                } else {
+                    appointmentList.innerHTML = '<p>No appointments scheduled.</p>';
+                }
+            })
+            .catch(error => console.error('Error fetching data:', error));
+        });
+    </script>
+</body>
+</html>
