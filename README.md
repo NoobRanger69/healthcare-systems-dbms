@@ -74,4 +74,4 @@ The Healthcare Appointment System is a comprehensive platform that allows patien
 This project is licensed under the MIT License.
 
 ## Author
-Developed by [NoobRanger79].
+Developed by [NoobRanger69].
